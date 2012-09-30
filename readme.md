@@ -8,27 +8,27 @@ It is available free for non-commercial use, and may be redistributed under thes
 
 These instructions are for compiling the code on OS X only. Compilation on other Unix-type architectures should be similar.
 
-a. Download the latest version of OpenCV-2.0:
+1. Download the latest version of OpenCV-2.0:
    > svn co https://code.ros.org/svn/opencv/trunk/opencv
-b. Follow the installation instructions for OpenCV from:
+2. Follow the installation instructions for OpenCV from:
    http://opencv.willowgarage.com/wiki/Mac_OS_X_OpenCV_Port
    Compile and install OpenCV to OPENCV_DIR (i.e some arbitrary local 
    directory).
-c. Uncompress the FaceTracker code: 
+3. Uncompress the FaceTracker code: 
    > tar xzvf FaceTracker.tar.gz
    This will uncompress a number of subdirectories within
    the root directory: 
    - src (contains all source code)
    - model (contains a pre-trained tracking model)
    - bin (will contain the executable after building)
-d. In the Makefile located in the root directory of the FaceTracker code, 
+4. In the Makefile located in the root directory of the FaceTracker code, 
    change the OPECV_PATH variable to the directory where OpenCV was installed
    (note: default installation directory is /usr/local ).
-e. Build the system:
+5. Build the system:
    > make
-f. The executable `face_tracker' can be found in the `bin' subdirectory.
+6. The executable `face_tracker' can be found in the `bin' subdirectory.
 
-## `face_tracker' Usage
+## Usage
 
 ````
 Usage: face_tracker [options]
