@@ -177,6 +177,10 @@ cv::Rect Tracker::UpdateTemplate(cv::Mat &im,cv::Mat &s,bool rsize)
 	small_.create(TSCALE*hh,TSCALE*ww,CV_8U);
       cv::resize(im,small_,cv::Size(TSCALE*ww,TSCALE*hh),0,0,CV_INTER_LINEAR);
     }
+		if (temp_.rows > 0)
+			R.width = (((R.width) < (temp_.rows)) ? (R.width) : (temp_.rows));  
+		if (temp_.cols > 0)
+			R.height = (((R.height) < (temp_.cols)) ? (R.height) : (temp_.cols)); 
     temp_ = small_(R).clone(); 
     R.x *= 1.0/TSCALE; R.y *= 1.0/TSCALE; 
     R.width *= 1.0/TSCALE; R.height *= 1.0/TSCALE; return R;

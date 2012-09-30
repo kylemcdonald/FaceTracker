@@ -109,7 +109,7 @@ void Align3Dto2DShapes(double& scale,double& pitch,double& yaw,double& roll,
   cv::Mat X = (s2D_cpy.reshape(1,2)).t(),S = (s3D_cpy.reshape(1,3)).t();
   for(i = 0; i < 2; i++){cv::Mat v = X.col(i); t2[i] = sum(v)[0]/n; v-=t2[i];}
   for(i = 0; i < 3; i++){cv::Mat v = S.col(i); t3[i] = sum(v)[0]/n; v-=t3[i];}
-  cv::Mat M = ((S.t()*S).inv(CV_SVD_SYM))*S.t()*X;
+  cv::Mat M = ((S.t()*S).inv(cv::DECOMP_CHOLESKY))*S.t()*X;
   cv::Mat MtM = M.t()*M; cv::SVD svd(MtM,cv::SVD::MODIFY_A);
   svd.w.db(0,0) = 1.0/sqrt(svd.w.db(0,0));
   svd.w.db(1,0) = 1.0/sqrt(svd.w.db(1,0));
@@ -314,7 +314,7 @@ void PDM::CalcReferenceUpdate(cv::Mat &dp,cv::Mat &plocal,cv::Mat &pglobl)
   pglobl.db(5,0) += dp.db(5,0);
   Euler2Rot(R1_,pglobl); R2_ = cv::Mat::eye(3,3,CV_64F);
   R2_.db(1,2) = -1.0*(R2_.db(2,1) = dp.db(1,0));
-  R2_.db(2,1) = -1.0*(R2_.db(0,2) = dp.db(2,0));
+  R2_.db(2,0) = -1.0*(R2_.db(0,2) = dp.db(2,0));
   R2_.db(0,1) = -1.0*(R2_.db(1,0) = dp.db(3,0));
   MetricUpgrade(R2_); R3_ = R1_*R2_; Rot2Euler(R3_,pglobl); return;
 }
