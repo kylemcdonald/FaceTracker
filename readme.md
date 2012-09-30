@@ -4,6 +4,11 @@ FaceTracker is a library for deformable face tracking written in C++ using OpenC
 
 It is available free for non-commercial use, and may be redistributed under these conditions. Please see `license.md` for complete details.
 
+Wrappers are available for:
+
+* [openFrameworks](http://www.openframeworks.cc/): [ofxFaceTracker](https://github.com/kylemcdonald/ofxFaceTracker)
+* [Cinder](http://libcinder.org/): [ciFaceTracker](https://github.com/Hebali/ciFaceTracker)
+
 ## Installation
 
 These instructions are for compiling the code on OS X only. Compilation on other Unix-type architectures should be similar.
