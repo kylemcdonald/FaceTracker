@@ -7,11 +7,11 @@ CXX=g++
 
 # Flags
 ARCH_FLAGS=-arch x86_64
-CFLAGS=-Wextra -Wall -pedantic-errors $(ARCH_FLAGS) -O3 -fopenmp
+CFLAGS=-Wextra -Wall -pedantic-errors $(ARCH_FLAGS) -O3
 LDFLAGS=$(ARCH_FLAGS)
 DEFINES=
 INCLUDES=-I$(OPENCV_PATH)/include -Isrc/lib
-LIBRARIES=-L$(OPENCV_PATH)/lib -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_objdetect -lgomp
+LIBRARIES=-L$(OPENCV_PATH)/lib -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_objdetect
 
 # Files which require compiling
 SOURCE_FILES=\
