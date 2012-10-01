@@ -37,7 +37,7 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////
-#include <Patch.h>
+#include <FaceTracker/Patch.h>
 #define SGN(x) (x<0) ? 0:1
 using namespace FACETRACKER;
 using namespace std;

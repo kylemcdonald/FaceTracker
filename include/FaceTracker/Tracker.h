@@ -37,49 +37,79 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef __CLM_h_
-#define __CLM_h_
-#include <PDM.h>
-#include <Patch.h>
-#include <vector>
+#ifndef __Tracker_h_
+#define __Tracker_h_
+#include <FaceTracker/CLM.h>
+#include <FaceTracker/FDet.h>
+#include <FaceTracker/FCheck.h>
 namespace FACETRACKER
 {
   //===========================================================================
   /** 
-      A Constrained Local Model
+      Face Tracker
   */
-  class CLM{
-  public:
-    PDM                               _pdm;   /**< 3D Shape model           */
-    cv::Mat                           _plocal;/**< local parameters         */
-    cv::Mat                           _pglobl;/**< global parameters        */
-    cv::Mat                           _refs;  /**< Reference shape          */
-    std::vector<cv::Mat>              _cent;  /**< Centers/view (Euler)     */
-    std::vector<cv::Mat>              _visi;  /**< Visibility for each view */
-    std::vector<std::vector<MPatch> > _patch; /**< Patches/point/view       */
+  class Tracker{
+  public:    
+    CLM        _clm;    /**< Constrained Local Model           */
+    FDet       _fdet;   /**< Face Detector                     */
+    int64      _frame;  /**< Frame number since last detection */    
+    MFCheck    _fcheck; /**< Failure checker                   */
+    cv::Mat    _shape;  /**< Current shape                     */
+    cv::Mat    _rshape; /**< Reference shape                   */
+    cv::Rect   _rect;   /**< Detected rectangle                */
+    cv::Scalar _simil;  /**< Initialization similarity         */
     
-    CLM(){;}
-    CLM(const char* fname){this->Load(fname);}
-    CLM(PDM &s,cv::Mat &r, std::vector<cv::Mat> &c,
-	std::vector<cv::Mat> &v,std::vector<std::vector<MPatch> > &p){
-      this->Init(s,r,c,v,p);
+    /** NULL constructor */
+    Tracker(){;}
+    
+    /** Constructor from model file */
+    Tracker(const char* fname){this->Load(fname);}
+
+    /** Constructor from components */
+    Tracker(CLM &clm,FDet &fdet,MFCheck &fcheck,
+	    cv::Mat &rshape,cv::Scalar &simil){
+      this->Init(clm,fdet,fcheck,rshape,simil);
     }
-    CLM& operator=(CLM const&rhs);
-    inline int nViews(){return _patch.size();}
-    int GetViewIdx();
+    /**
+       Track model in current frame
+       @param im     Image containing face
+       @param wSize  List of search window sizes (set from large to small)
+       @param fpd    Number of frames between detections (-1: never)
+       @param nIter  Maximum number of optimization steps to perform.
+       @param clamp  Shape model parameter clamping factor (in standard dev's)
+       @param fTol   Convergence tolerance of optimization
+       @param fcheck Check if tracking succeeded?
+       @return       -1 on failure, 0 otherwise.
+    */
+    int Track(cv::Mat im,std::vector<int> &wSize,
+	      const int    fpd    =-1,
+	      const int    nIter  = 10,
+	      const double clamp  = 3.0,
+	      const double fTol   = 0.01,
+	      const bool   fcheck = true);
+
+    /** Reset frame number (will perform detection in next image) */
+    inline void FrameReset(){_frame = -1;}
+
+    /** Load tracker from model file */
     void Load(const char* fname);
+
+    /** Save tracker to model file */
     void Save(const char* fname);
+    
+    /** Write tracker to file stream */
     void Write(std::ofstream &s);
+
+    /** Read tracking from file stream */
     void Read(std::ifstream &s,bool readType = true);
-    void Init(PDM &s,cv::Mat &r, std::vector<cv::Mat> &c,
-	      std::vector<cv::Mat> &v,std::vector<std::vector<MPatch> > &p);
-    void Fit(cv::Mat im, std::vector<int> &wSize,
-	     int nIter = 10,double clamp = 3.0,double fTol = 0.0);
+
   private:
-    cv::Mat cshape_,bshape_,oshape_,ms_,u_,g_,J_,H_; 
-    std::vector<cv::Mat> prob_,pmem_,wmem_;
-    void Optimize(int idx,int wSize,int nIter,
-		  double fTol,double clamp,bool rigid);
+    cv::Mat gray_,temp_,ncc_,small_;
+    void Init(CLM &clm,FDet &fdet,MFCheck &fcheck,
+	      cv::Mat &rshape,cv::Scalar &simil);    
+    void InitShape(cv::Rect &r,cv::Mat &shape);
+    cv::Rect ReDetect(cv::Mat &im);
+    cv::Rect UpdateTemplate(cv::Mat &im,cv::Mat &s,bool rsize);
   };
   //===========================================================================
 }

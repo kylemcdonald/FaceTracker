@@ -37,47 +37,49 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef __FDet_h_
-#define __FDet_h_
-#include <IO.h>
+#ifndef __CLM_h_
+#define __CLM_h_
+#include <FaceTracker/PDM.h>
+#include <FaceTracker/Patch.h>
+#include <vector>
 namespace FACETRACKER
 {
   //===========================================================================
   /** 
-      A wrapper for OpenCV's face detector
+      A Constrained Local Model
   */
-  class FDet{
-  public:    
-    int                      _min_neighbours; /**< see OpenCV documentation */
-    int                      _min_size;       /**< ...                      */
-    double                   _img_scale;      /**< ...                      */
-    double                   _scale_factor;   /**< ...                      */
-    CvHaarClassifierCascade* _cascade;        /**< ...                      */
-
-    FDet(){storage_=NULL;_cascade=NULL;}
-    FDet(const char* fname){this->Load(fname);}
-    FDet(const char*  cascFile,
-	 const double img_scale = 1.3,
-	 const double scale_factor = 1.1,
-	 const int    min_neighbours = 2,
-	 const int    min_size = 30){
-      this->Init(cascFile,img_scale,scale_factor,min_neighbours,min_size);
+  class CLM{
+  public:
+    PDM                               _pdm;   /**< 3D Shape model           */
+    cv::Mat                           _plocal;/**< local parameters         */
+    cv::Mat                           _pglobl;/**< global parameters        */
+    cv::Mat                           _refs;  /**< Reference shape          */
+    std::vector<cv::Mat>              _cent;  /**< Centers/view (Euler)     */
+    std::vector<cv::Mat>              _visi;  /**< Visibility for each view */
+    std::vector<std::vector<MPatch> > _patch; /**< Patches/point/view       */
+    
+    CLM(){;}
+    CLM(const char* fname){this->Load(fname);}
+    CLM(PDM &s,cv::Mat &r, std::vector<cv::Mat> &c,
+	std::vector<cv::Mat> &v,std::vector<std::vector<MPatch> > &p){
+      this->Init(s,r,c,v,p);
     }
-    ~FDet();
-    FDet& operator=(FDet const&rhs);
-    void Init(const char* fname,
-	      const double img_scale = 1.3,
-	      const double scale_factor = 1.1,
-	      const int    min_neighbours = 2,
-	      const int    min_size = 30);
-    cv::Rect Detect(cv::Mat im);
+    CLM& operator=(CLM const&rhs);
+    inline int nViews(){return _patch.size();}
+    int GetViewIdx();
     void Load(const char* fname);
     void Save(const char* fname);
     void Write(std::ofstream &s);
     void Read(std::ifstream &s,bool readType = true);
-    
+    void Init(PDM &s,cv::Mat &r, std::vector<cv::Mat> &c,
+	      std::vector<cv::Mat> &v,std::vector<std::vector<MPatch> > &p);
+    void Fit(cv::Mat im, std::vector<int> &wSize,
+	     int nIter = 10,double clamp = 3.0,double fTol = 0.0);
   private:
-    cv::Mat small_img_; CvMemStorage* storage_;
+    cv::Mat cshape_,bshape_,oshape_,ms_,u_,g_,J_,H_; 
+    std::vector<cv::Mat> prob_,pmem_,wmem_;
+    void Optimize(int idx,int wSize,int nIter,
+		  double fTol,double clamp,bool rigid);
   };
   //===========================================================================
 }

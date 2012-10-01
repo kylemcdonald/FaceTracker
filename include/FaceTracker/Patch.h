@@ -37,45 +37,61 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef __PDM_h_
-#define __PDM_h_
-#include <IO.h>
+#ifndef __Patch_h_
+#define __Patch_h_
+#include <FaceTracker/IO.h>
 namespace FACETRACKER
 {
   //===========================================================================
   /** 
-      A 3D Point Distribution Model
+      A Patch Expert
   */
-  class PDM{
-  public:    
-    cv::Mat _V; /**< basis of variation                            */
-    cv::Mat _E; /**< vector of eigenvalues (row vector)            */
-    cv::Mat _M; /**< mean 3D shape vector [x1,..,xn,y1,...yn]      */
-
-    PDM(){;}
-    PDM(const char* fname){this->Load(fname);}
-    PDM(cv::Mat &M,cv::Mat &V,cv::Mat &E){this->Init(M,V,E);}
-    PDM& operator=(PDM const&rhs);
-    inline int nPoints(){return _M.rows/3;}
-    inline int nModes(){return _V.cols;}
-    inline double Var(int i){assert(i<_E.cols); return _E.at<double>(0,i);}
+  class Patch{
+  public:
+    int     _t; /**< Type of patch (0=raw,1=grad,2=lbp) */
+    double  _a; /**< scaling                            */
+    double  _b; /**< bias                               */
+    cv::Mat _W; /**< Gain                               */
+    
+    Patch(){;}
+    Patch(const char* fname){this->Load(fname);}
+    Patch(int t,double a,double b,cv::Mat &W){this->Init(t,a,b,W);}
+    Patch& operator=(Patch const&rhs);
+    inline int w(){return _W.cols;}
+    inline int h(){return _W.rows;}
     void Load(const char* fname);
     void Save(const char* fname);
     void Write(std::ofstream &s);
     void Read(std::ifstream &s,bool readType = true);
-    void Clamp(cv::Mat &p,double c);
-    void Init(cv::Mat &M,cv::Mat &V,cv::Mat &E);
-    void Identity(cv::Mat &plocal,cv::Mat &pglobl);
-    void CalcShape3D(cv::Mat &s,cv::Mat &plocal);
-    void CalcShape2D(cv::Mat &s,cv::Mat &plocal,cv::Mat &pglobl);
-    void CalcParams(cv::Mat &s,cv::Mat &plocal,cv::Mat &pglobl);
-    void CalcRigidJacob(cv::Mat &plocal,cv::Mat &pglobl,cv::Mat &Jacob);
-    void CalcJacob(cv::Mat &plocal,cv::Mat &pglobl,cv::Mat &Jacob);
-    void CalcReferenceUpdate(cv::Mat &dp,cv::Mat &plocal,cv::Mat &pglobl);
-    void ApplySimT(double a,double b,double tx,double ty,cv::Mat &pglobl);
-    
+    void Init(int t, double a, double b, cv::Mat &W);
+    void Response(cv::Mat &im,cv::Mat &resp);    
+
   private:
-    cv::Mat S_,R_,s_,P_,Px_,Py_,Pz_,R1_,R2_,R3_;
+    cv::Mat im_,res_;
+  };
+  //===========================================================================
+  /**
+     A Multi-patch Expert
+  */
+  class MPatch{
+  public:
+    int _w,_h;             /**< Width and height of patch */
+    std::vector<Patch> _p; /**< List of patches           */
+    
+    MPatch(){;}
+    MPatch(const char* fname){this->Load(fname);}
+    MPatch(std::vector<Patch> &p){this->Init(p);}
+    MPatch& operator=(MPatch const&rhs);
+    inline int nPatch(){return _p.size();}
+    void Load(const char* fname);
+    void Save(const char* fname);
+    void Write(std::ofstream &s);
+    void Read(std::ifstream &s,bool readType = true);
+    void Init(std::vector<Patch> &p);
+    void Response(cv::Mat &im,cv::Mat &resp);    
+
+  private:
+    cv::Mat res_;
   };
   //===========================================================================
 }

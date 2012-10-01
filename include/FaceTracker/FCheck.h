@@ -37,49 +37,56 @@
 // (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF 
 // THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef __PAW_h_
-#define __PAW_h_
-#include <IO.h>
+#ifndef __FCheck_h_
+#define __FCheck_h_
+#include <FaceTracker/PAW.h>
+#include <vector>
 namespace FACETRACKER
 {
   //===========================================================================
   /** 
-      A Piecewise Affine Warp
+      Checks for Tracking Failure
   */
-  class PAW{
+  class FCheck{
   public:    
-    int     _nPix;   /**< Number of pixels                   */
-    double  _xmin;   /**< Minimum x-coord for src            */
-    double  _ymin;   /**< Minimum y-coord for src            */
-    cv::Mat _src;    /**< Source points                      */
-    cv::Mat _dst;    /**< destination points                 */
-    cv::Mat _tri;    /**< Triangulation                      */
-    cv::Mat _tridx;  /**< Triangle for each valid pixel      */
-    cv::Mat _mask;   /**< Valid region mask                  */
-    cv::Mat _coeff;  /**< affine coeffs for all triangles    */
-    cv::Mat _alpha;  /**< matrix of (c,x,y) coeffs for alpha */
-    cv::Mat _beta;   /**< matrix of (c,x,y) coeffs for alpha */
-    cv::Mat _mapx;   /**< x-destination of warped points     */
-    cv::Mat _mapy;   /**< y-destination of warped points     */
+    PAW     _paw; /**< Piecewise affine warp */
+    double  _b;   /**< SVM bias              */
+    cv::Mat _w;   /**< SVM gain              */
 
-    PAW(){;}
-    PAW(const char* fname){this->Load(fname);}
-    PAW(cv::Mat &src,cv::Mat &tri){this->Init(src,tri);}
-    PAW& operator=(PAW const&rhs);
-    inline int nPoints(){return _src.rows/2;}
-    inline int nTri(){return _tri.rows;}
-    inline int Width(){return _mask.cols;}
-    inline int Height(){return _mask.rows;}
+    FCheck(){;}
+    FCheck(const char* fname){this->Load(fname);}
+    FCheck(double b, cv::Mat &w, PAW &paw){this->Init(b,w,paw);}
+    FCheck& operator=(FCheck const&rhs);
+    void Init(double b, cv::Mat &w, PAW &paw);
     void Load(const char* fname);
     void Save(const char* fname);
     void Write(std::ofstream &s);
     void Read(std::ifstream &s,bool readType = true);
-    void Init(cv::Mat &src,cv::Mat &tri);
-    void Crop(cv::Mat &src, cv::Mat &dst,cv::Mat &s);
-
-  private:    
-    void CalcCoeff();
-    void WarpRegion(cv::Mat &mapx,cv::Mat &mapy);
+    bool Check(cv::Mat &im,cv::Mat &s);
+    
+  private:
+    cv::Mat crop_,vec_;
+  };
+  //===========================================================================
+  /** 
+      Checks for Multiview Tracking Failure
+  */
+  class MFCheck{
+  public:    
+    std::vector<FCheck> _fcheck; /**< FCheck for each view */
+    
+    MFCheck(){;}
+    MFCheck(const char* fname){this->Load(fname);}
+    MFCheck(std::vector<FCheck> &fcheck){this->Init(fcheck);}
+    MFCheck& operator=(MFCheck const&rhs){      
+      this->_fcheck = rhs._fcheck; return *this;
+    }
+    void Init(std::vector<FCheck> &fcheck){_fcheck = fcheck;}
+    void Load(const char* fname);
+    void Save(const char* fname);
+    void Write(std::ofstream &s);
+    void Read(std::ifstream &s,bool readType = true);
+    bool Check(int idx,cv::Mat &im,cv::Mat &s);
   };
   //===========================================================================
 }

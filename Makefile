@@ -10,7 +10,7 @@ ARCH_FLAGS=-arch x86_64
 CFLAGS=-Wextra -Wall -pedantic-errors $(ARCH_FLAGS) -O3
 LDFLAGS=$(ARCH_FLAGS)
 DEFINES=
-INCLUDES=-I$(OPENCV_PATH)/include -Isrc/lib
+INCLUDES=-I$(OPENCV_PATH)/include -Iinclude/
 LIBRARIES=-L$(OPENCV_PATH)/lib -lopencv_core -lopencv_highgui -lopencv_imgproc -lopencv_objdetect
 
 # Files which require compiling
