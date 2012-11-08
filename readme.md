@@ -8,6 +8,7 @@ Wrappers are available for:
 
 * [openFrameworks](http://www.openframeworks.cc/): [ofxFaceTracker](https://github.com/kylemcdonald/ofxFaceTracker)
 * [Cinder](http://libcinder.org/): [ciFaceTracker](https://github.com/Hebali/ciFaceTracker)
+* Python: [pyfacetracker](https://bitbucket.org/amitibo/pyfacetracker)
 
 ## Installation
 
