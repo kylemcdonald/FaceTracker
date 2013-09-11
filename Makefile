@@ -7,7 +7,7 @@ CXX=g++
 
 # Flags
 ARCH_FLAGS=-arch x86_64
-CFLAGS=-Wextra -Wall -pedantic-errors $(ARCH_FLAGS) -O3
+CFLAGS=-Wextra -Wall -pedantic-errors $(ARCH_FLAGS) -O3 -Wno-long-long
 LDFLAGS=$(ARCH_FLAGS)
 DEFINES=
 INCLUDES=-I$(OPENCV_PATH)/include -Iinclude/
