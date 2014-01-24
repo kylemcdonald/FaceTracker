@@ -1,9 +1,4 @@
-# FaceTracker (Works on Linux)
-
-To build on Ubuntu Linux you need:
-
-sudo apt-get install libcv-dev libopencv-dev
-
+# FaceTracker
 
 FaceTracker is a library for deformable face tracking written in C++ using OpenCV 2, authored by [Jason Saragih](http://jsaragih.org/) and maintained by [Kyle McDonald](http://kylemcdonald.net/).
 
