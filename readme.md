@@ -26,7 +26,9 @@ These instructions are for compiling the code on OS X only. Compilation on other
 
 To build on Ubuntu Linux you need:
 
+```
 sudo apt-get install libcv-dev libopencv-dev
+```
 
 ## `face_tracker` Usage
 
