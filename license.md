@@ -1,4 +1,4 @@
-Summary: FaceTracker is available for non-commercial use only. For other licenses, contact the author [Jason Saragih](jason.saragih@csiro.au) directly. The complete license follows.
+Summary: FaceTracker is available for non-commercial use only. For commercial use, [request a quote](http://facetracker.net/quote/).The complete license follows.
 
 ---
 
