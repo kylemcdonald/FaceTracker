@@ -12,23 +12,20 @@ Wrappers are available for:
 
 ## Installation
 
-These instructions are for compiling the code on OS X only. Compilation on other Unix-type architectures should be similar.
+These instructions are for compiling the code on OS X and Ubuntu, but it should be possible to compile on other platforms.
 
-1. Download the latest version of OpenCV-2.0 with `git clone git://code.opencv.org/opencv.git` (more instructions [here](http://code.opencv.org/projects/opencv/wiki/Working_with_OpenCV_git_repository))
-2. Follow the OpenCv [installation instructions](http://opencv.willowgarage.com/wiki/Mac_OS_X_OpenCV_Port) and compile and install OpenCV to some arbitrary local directory (usually `/usr/local/`).
-3. Clone the FaceTracker code with `git clone git://github.com/kylemcdonald/FaceTracker.git`. This will number of subdirectories within the root directory:
+First, install OpenCV-2.x. This code has been tested with OpenCV-2.0 and OpenCV-2.4. On OSX you can use `[brew](http://brew.sh/) install opencv` and on Ubuntu use `sudo apt-get install libcv-dev libopencv-dev`. Alternatively, you can download the repository from `git clone git://code.opencv.org/opencv.git` and compile it manually.
+
+Then, clone this repository with `git clone git://github.com/kylemcdonald/FaceTracker.git`. This repository contains a few subdirectories within the root directory:
    - src (contains all source code)
    - model (contains a pre-trained tracking model)
    - bin (will contain the executable after building)
-4. In the `Makefile` located in the root directory of the FaceTracker code, change the `OPECV_PATH` variable to the directory where OpenCV was installed (by defualt `/usr/local`). Optionally, you can also add `-fopenmp` to the `CFLAGS` and `-lgomp` to `LIBRARIES` to compile with [OpenMP](http://openmp.org/) support.
-5. Build the system with `make`.
-6. The executable `face_tracker` can be found in the `bin` subdirectory.
 
-To build on Ubuntu Linux you need:
+Next, make sure that your copy of OpenCV is located in `/usr/local` (this should be the case if you used `brew` or `apt-get`). If it isn't located there, modify the `OPENCV_PATH` in the `Makefile`. Optionally, you can also add `-fopenmp` to the `CFLAGS` and `-lgomp` to `LIBRARIES` to compile with [OpenMP](http://openmp.org/) support.
 
-```
-sudo apt-get install libcv-dev libopencv-dev
-```
+From the root `FaceTracker` directory, build the library and example by running `make`.
+
+To test the demo, `cd bin` and `./face_tracker`. Because many webcams are 1280x720, try running `./face_tracker -s .25` to rescale the image before processing for a smoother framerate.
 
 ## `face_tracker` Usage
 
