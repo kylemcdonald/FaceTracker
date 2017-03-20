@@ -21,14 +21,29 @@ Wrappers are available for:
 
 These instructions are for compiling the code on OS X and Ubuntu, but it should be possible to compile on other platforms.
 
-First, install OpenCV-2.x. This code has been tested with OpenCV-2.0 and OpenCV-2.4. On OSX you can use `[brew](http://brew.sh/) install opencv` and on Ubuntu use `sudo apt-get install libcv-dev libopencv-dev`. Alternatively, you can download the repository from `git clone git://code.opencv.org/opencv.git` and compile it manually.
+First, install OpenCV3 (if you're using OpenCV2, use the [opencv2](https://github.com/kylemcdonald/FaceTracker/tree/opencv2) branch of this repo). On OSX you can use [homebrew](http://brew.sh/):
 
-Then, clone this repository with `git clone git://github.com/kylemcdonald/FaceTracker.git`. This repository contains a few subdirectories within the root directory:
+```
+$ brew tap homebrew/science
+$ brew install homebrew
+```
+
+And on Ubuntu use:
+
+```
+$ sudo apt-get install libcv-dev libopencv-dev
+```
+
+Alternatively, you can download [OpenCV from the GitHub](https://github.com/opencv/opencv) and compile it manually.
+
+After installing OpenCV, clone this repository with `git clone git://github.com/kylemcdonald/FaceTracker.git`. This repository contains a few subdirectories within the root directory:
    - src (contains all source code)
    - model (contains a pre-trained tracking model)
    - bin (will contain the executable after building)
 
-Next, make sure that your copy of OpenCV is located in `/usr/local` (this should be the case if you used `brew` or `apt-get`). If it isn't located there, modify the `OPENCV_PATH` in the `Makefile`. Optionally, you can also add `-fopenmp` to the `CFLAGS` and `-lgomp` to `LIBRARIES` to compile with [OpenMP](http://openmp.org/) support.
+Next, make sure that your copy of OpenCV is located in `/usr/local` (this should be the case if you used `apt-get`). If it isn't located there, modify the `OPENCV_PATH` in the `Makefile`. If you installed with Homebrew, it should be set to `/usr/local/opt/opencv3`.
+
+Optionally, you can also add `-fopenmp` to the `CFLAGS` and `-lgomp` to the `LIBRARIES` variable to compile with [OpenMP](http://openmp.org/) support.
 
 From the root `FaceTracker` directory, build the library and example by running `make`.
 

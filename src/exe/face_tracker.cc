@@ -174,7 +174,7 @@ int main(int argc, const char** argv)
   
   //initialize camera and display window
   cv::Mat frame,gray,im; double fps=0; char sss[256]; std::string text; 
-  CvCapture* camera = cvCreateCameraCapture(CV_CAP_ANY); if(!camera)return -1;
+  cv::VideoCapture camera(CV_CAP_ANY); if(!camera.isOpened()) return -1;
   int64 t1,t0 = cvGetTickCount(); int fnum=0;
   cvNamedWindow("Face Tracker",1);
   std::cout << "Hot keys: "        << std::endl
@@ -185,7 +185,7 @@ int main(int argc, const char** argv)
   bool failed = true;
   while(1){ 
     //grab image, resize and flip
-    IplImage* I = cvQueryFrame(camera); if(!I)continue; frame = I;
+    camera.read(frame);
     if(scale == 1)im = frame; 
     else cv::resize(frame,im,cv::Size(scale*frame.cols,scale*frame.rows));
     cv::flip(im,im,1); cv::cvtColor(im,gray,CV_BGR2GRAY);
