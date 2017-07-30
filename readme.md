@@ -25,7 +25,7 @@ First, install OpenCV3 (if you're using OpenCV2, use the [opencv2](https://githu
 
 ```
 $ brew tap homebrew/science
-$ brew install homebrew
+$ brew install opencv3
 ```
 
 And on Ubuntu use:
