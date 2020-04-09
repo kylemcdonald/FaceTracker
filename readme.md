@@ -2,13 +2,14 @@
 
 FaceTracker is a library for deformable face tracking written in C++ using OpenCV 2, authored by [Jason Saragih](http://jsaragih.org/) and maintained by [Kyle McDonald](http://kylemcdonald.net/).
 
-It is available free for non-commercial use, and may be redistributed under these conditions. Please see `license.md` for complete details. For commercial use, [request a quote](http://facetracker.net/quote/).
+Any publications arising from the use of this software, including but not limited to academic journal and conference publications, technical reports and manuals, should cite the following work: `J. M. Saragih, S. Lucey, and J. F. Cohn. Face Alignment through Subspace Constrained Mean-Shifts. International Conference of Computer Vision (ICCV), September, 2009.`
 
 ## FAQ
 
 1. **"I successfully compiled the code, so why is my app is crashing?"** Make sure that your model files are in the right location. If you see the error `Assertion failed: s.is_open()` when running your app, that means you forgot to put the model files in the right directory.
 2. **"Is there an example of using FaceTracker on a mobile device?"** There is no official example. But there is an example of using ofxFaceTracker on iOS [here](https://github.com/kylemcdonald/ofxFaceTracker-iOS) and a native Android example [here](https://github.com/ajdroid/facetrackerapp).
 3. **"Why is the tracking is slow, and why is there high CPU usage?"** The face detection step (finding the general location of the face) can be slow. If this is causing an issue, you might want to put the tracking in a separate thread. If the detection is very slow you might try using a face detector that is native to your platform, and initializing FaceTracker with that rectangle.
+4. **Can I use this for my commercial project/product?** Yes. FaceTracker was re-licensed under the MIT license on April 8, 2020. Previously it was available under a custom non-commercial use license, with a separate license for commercial use available for purchase.
 
 Wrappers are available for:
 
