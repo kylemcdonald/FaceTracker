@@ -1,5 +1,7 @@
 # FaceTracker
 
+**This repository is no longer maintained, due to challenges of upgrading to OpenCV 4.**
+
 FaceTracker is a library for deformable face tracking written in C++ using OpenCV 2, authored by [Jason Saragih](http://jsaragih.org/) and maintained by [Kyle McDonald](http://kylemcdonald.net/).
 
 Any publications arising from the use of this software, including but not limited to academic journal and conference publications, technical reports and manuals, should cite the following work: `J. M. Saragih, S. Lucey, and J. F. Cohn. Face Alignment through Subspace Constrained Mean-Shifts. International Conference of Computer Vision (ICCV), September, 2009.`
